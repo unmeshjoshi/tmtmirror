@@ -54,8 +54,8 @@ body {
 
 .hexagon-popup {
     position: fixed;
-    top: 20px;  /* Fixed position at top */
-    right: 20px;  /* Fixed position at right */
+    top: 100px;  /* Moved down to avoid overlap with theme selector */
+    right: 20px;
     background: rgba(51, 51, 51, 0.95);  /* Dark background */
     color: white;  /* Light text */
     border-radius: 8px;
@@ -101,4 +101,51 @@ text {
     text-anchor: middle;
     dominant-baseline: central;
     pointer-events: none;
+}
+
+.theme-selector {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(51, 51, 51, 0.95);
+    padding: 15px;
+    border-radius: 8px;
+    color: white;
+    font-family: Arial, sans-serif;
+    z-index: 1001;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.theme-selector label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #a9def9;
+}
+
+.theme-selector select {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    width: 100%;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.theme-selector select:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.theme-selector select:focus {
+    outline: none;
+    border-color: #a9def9;
+}
+
+.theme-selector select option {
+    background-color: #333;
+    color: white;
 }

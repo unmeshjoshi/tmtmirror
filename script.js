@@ -7,25 +7,63 @@ class HoneycombGrid {
             gridRadius: config.gridRadius || 400,
             gridRange: config.gridRange || 20,
             centerGap: config.centerGap || true,
-            colors: config.colors || ["#a9def9", "#e4c1f9", "#f9dc5c"]  // 3 colors for 6 sections
+            colors: config.colors || this.colorThemes.metallicBlues
         };
 
-        // Adjust measurements for proper edge sharing
+        this.colorThemes = {
+            starkTech: ["#0FF0FC", "#FF2281", "#7D83FF"],
+            classicSuperman: ["#0033AD", "#EE1D24", "#FFD700"],
+            manOfSteel: ["#003C7D", "#B81D22", "#96A8C8"],
+            kryptonianTech: ["#00A9E0", "#DA1F3D", "#C4D6F2"],
+            metallicBlues: ["#B8C6DB", "#89A3C2", "#5B7BA6"],
+            infinityStones: ["#3CDFFF", "#B19CD9", "#FF4B4B"],
+            ironMan: ["#FF4B4B", "#FFD700", "#FF8C00"],
+            quantumRealm: ["#00F2FE", "#FF00E4", "#4DEEEA"]
+        };
+
         this.measurements = {
-            // Width of hexagon
             hexagonWidth: this.config.hexagonEdgeLength,
-            // Height of hexagon (distance between parallel sides)
             hexagonHeight: this.config.hexagonEdgeLength * Math.sqrt(3),
-            // Horizontal spacing (for vertical edge sharing in same row)
             horizontalSpacing: this.config.hexagonEdgeLength,
-            // Vertical spacing between rows
             verticalSpacing: this.config.hexagonEdgeLength * Math.sqrt(3) / 2,
-            // Horizontal offset for alternate rows (for slanted edge sharing)
             rowOffset: this.config.hexagonEdgeLength / 2
         };
 
         this.hexagons = [];
         this.setupPopup();
+        this.setupThemeSelector();
+    }
+
+    setupThemeSelector() {
+        const selector = document.createElement('div');
+        selector.className = 'theme-selector';
+        selector.innerHTML = `
+            <label for="theme-select">Color Theme:</label>
+            <select id="theme-select">
+                <option value="classicSuperman" selected>Classic Superman</option>
+                <option value="starkTech">Stark Tech</option>
+                <option value="manOfSteel">Man of Steel</option>
+                <option value="kryptonianTech">Kryptonian Tech</option>
+                <option value="metallicBlues">Metallic Blues</option>
+                <option value="infinityStones">Infinity Stones</option>
+                <option value="ironMan">Iron Man</option>
+                <option value="quantumRealm">Quantum Realm</option>
+            </select>
+        `;
+
+        document.body.appendChild(selector);
+
+        document.getElementById('theme-select').addEventListener('change', (e) => {
+            this.config.colors = this.colorThemes[e.target.value];
+            this.regenerateGrid();
+        });
+    }
+
+    regenerateGrid() {
+        // Clear existing grid
+        this.container.innerHTML = '';
+        // Regenerate with new colors
+        this.generateGrid();
     }
 
     setupPopup() {
@@ -186,7 +224,7 @@ const honeycombConfig = {
     gridRadius: 400,
     gridRange: 20,
     centerGap: true,
-    colors: ["#a9def9", "#e4c1f9", "#f9dc5c"]  // 3 colors for 6 sections
+    colors: ["#B8C6DB", "#89A3C2", "#5B7BA6"]  // metallic blue colors.
 };
 
 const honeycombGrid = new HoneycombGrid('mirror-grid', honeycombConfig);
