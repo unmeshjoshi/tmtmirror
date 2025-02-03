@@ -131,7 +131,7 @@ class HoneycombGrid {
     showPopup(metadata, event) {
         this.popup.innerHTML = `
             <div class="popup-content">
-                <div class="popup-header">Hexagon #${metadata.number}</div>
+                <div class="popup-header">Mirror #${metadata.number}</div>
                 <div class="popup-body">
                     <p>Position: ${metadata.position}</p>
                     <p>Status: ${metadata.status}</p>
