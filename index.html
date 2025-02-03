@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>500 Hexagons Circular Grid with D3.js</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #ffffff;
+    }
+    svg {
+      display: block;
+    }
+  </style>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://d3js.org/d3-hexbin.v0.2.min.js"></script>
+</head>
+<body>
+  <svg id="hexGrid"></svg>
+
+  <script>
+    const width = 700;
+    const height = 700;
+    let hexRadius = 15;  // Adjusted size to fit around 500 hexagons
+    let circleRadius = 300;  // Initial circle radius for fitting hexagons
+
+    const svg = d3.select("#hexGrid")
+      .attr("width", width)
+      .attr("height", height)
+      .append("g")
+      .attr("transform", `translate(${width / 2}, ${height / 2})`);
+
+    const hexbin = d3.hexbin()
+      .radius(hexRadius)
+      .extent([[0, 0], [width, height]]);
+
+    let points = [];
+    const maxIterations = 100;  // Limit to prevent infinite loops
+    let iteration = 0;
+
+    // Function to generate points
+    function generatePoints() {
+      points = [];
+      for (let x = -width / 2 - hexRadius; x < width / 2 + hexRadius; x += hexRadius * 1.5) {
+        for (let y = -height / 2 - hexRadius; y < height / 2 + hexRadius; y += hexRadius * Math.sqrt(3)) {
+          if (Math.sqrt(x * x + y * y) < circleRadius) {
+            points.push([x, y]);
+          }
+        }
+      }
+    }
+
+    // Dynamically adjust parameters to aim for ~500 hexagons
+    while ((points.length < 495 || points.length > 505) && iteration < maxIterations) {
+      generatePoints();
+      if (points.length > 505) {
+        circleRadius -= 2;
+      } else if (points.length < 495) {
+        circleRadius += 2;
+      }
+      iteration++;
+    }
+
+    // Ensure we don't exceed the max limit if still not exact
+    if (points.length > 500) {
+      points = points.slice(0, 500);
+    }
+
+    // Draw hexagons
+    svg.append("g")
+      .selectAll("path")
+      .data(hexbin(points))
+      .enter().append("path")
+      .attr("d", hexbin.hexagon())
+      .attr("transform", d => `translate(${d.x},${d.y})`)
+      .attr("fill", d => getColor(d.x, d.y))
+      .attr("stroke", "#fff")
+      .attr("stroke-width", 0.5);  // Minimal stroke to reduce gaps
+
+    // Coloring function based on angle
+    function getColor(x, y) {
+      const angle = (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
+      if (angle >= 0 && angle < 120) {
+        return "#a9def9"; // Blue section
+      } else if (angle >= 120 && angle < 240) {
+        return "#e4c1f9"; // Purple section
+      } else {
+        return "#f9dc5c"; // Yellow section
+      }
+    }
+  </script>
+</body>
+</html>
